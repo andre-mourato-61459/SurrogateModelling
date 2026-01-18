@@ -33,17 +33,20 @@
 %\usepackage[authoryear]{natbib}
 % \usepackage[authoryear,longnamesfirst]{natbib}
 
+\usepackage{soul}
+\usepackage{xcolor}
+
 %%%Author macros
 \def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
 \tsc{WGM}
 \tsc{QE}
 %%%
 
-%\newcommand\revone{blue}
-%\newcommand\revtwo{OliveGreen}
+% \newcommand\revone{yellow}
+% \newcommand\revtwo{OliveGreen}
 
-\newcommand\revone{black}
-\newcommand\revtwo{black}
+% \newcommand\revone{black}
+% \newcommand\revtwo{black}
 
 %Acrónimos
 \usepackage[acronym,nomain,nonumberlist]{glossaries}
@@ -99,7 +102,7 @@
 \newacronym{RLBM}{RLBM}{Regularized Lattice Boltzman Method}
 \newacronym{ROM}{ROM}{Reduced Order Model}
 \newacronym{RPIM}{RPIM}{Radial Point Interpolation Method}
-\newacronym{SP}{SP}{Source Points}
+\newacronym{SP}{SP}{Source Point}
 \newacronym{SPH}{SPH}{Smoothed Particle Hydrodynamics}
 \newacronym{SSM}{SSM}{Statistical Shape Model}
 \newacronym{STJ}{STJ}{Sinotubular Junction}
@@ -249,19 +252,6 @@
   Conclusions: The results highlight the potential of data-driven approaches to accelerate patient-specific biomechanical assessments, paving the way for integration into future clinical decision-support systems.
 \end{abstract}
 
-% % Use if graphical abstract is present
-% %\begin{graphicalabstract}
-  % %\includegraphics{}
-% %\end{graphicalabstract}
-
-% % Research highlights
-% \begin{highlights}
-%   \item Comparison of tissue prestressing methods to perform accurate Fluid-Structure Interaction (FSI) simulations of Ascending Thoracic Aortic Aneurysm (ATAA).
-%   \item Zero Pressure Geometry (ZPG) and Prestress Tensor (PT) algorithms have been systematically compared to assess the impact of these methodologies on FSI simulations.
-%   \item The ZPG and PT algorithms produced similar results regarding ATAA hemodynamics, however, the PT approach estimated a significantly stiffer ATAA wall mechanical response.
-%   \item Combining regional mapping of material properties with the PT algorithm improves the agreement with the ZPG approach on ATAA wall mechanics.
-% \end{highlights}
-
 % Keywords
 % Each keyword is seperated by \sep
 \begin{keywords}
@@ -277,11 +267,11 @@ Ascending Thoracic Aortic Aneurysm (ATAA)\sep Computational Solid Mechanics (CSM
 \section{Introduction}\label{sec:intro}
 \glspl{ATAA} represent a risk factor for the development of life-threatening cardiovascular events, such as aortic dissection or rupture~\cite{GOUVEIAEMELO2022,KUZMIK2012565}. The clinical guidelines for the diagnosis and treatment of aortic aneurysms rely on the maximum aortic diameter as a primary risk stratification criterion~\cite{europeguidelines2014,american2010}. However, this metrics fails to capture patient-specific biomechanical factors known to influence aortic wall failure~\cite{MARTUFI2016390,Pape20071120}. Numerical models are fundamental tools in engineering, enabling the analysis of complex systems. More recently, numerical models have been increasingly applied in the field of cardiovascular biomechanics~\cite{Sazonov2017,long2017,Brunet2021,Moosavi2014} as alternatives to traditional risk stratification methods. One significant limitation of numerical modelling, in particular for clinical applications, is that usually require extensive reporting times. Additionally, it also often requires running multiple simulations.
 
-Simplified models that closely replicate the outputs of high-fidelity simulations, allow drastic reductions in the calculation time. Thus, surrogate modelling is particularly valuable in scenarios where the extensive reporting time of numerical models imposes a strong practical constraint~\cite{alizadeh2020,mendez2018}. In the realm of cardiovascular biomechanics analysis, In tis case, surrogate models may be used to increase the efficiency of numerical simulations of~\glspl{ATAA} biomechanics and, therefore, improve current clinical guidelines. On one hand numerical model has proved it's ability to accurately recreate the conditions of cardiovascular systems, including biological systems~\cite{Mariotti2021,Bols2016,Yang2014,Lantz2011}. On the other hand, surrogate models are able to reduce the computational cost of numerical models, while maintaining a acceptable level of accuracy~\cite{alizadeh2020,donmazov2024}.
+Simplified models that closely replicate the outputs of high-fidelity simulations, allow drastic reductions in the calculation time. Thus, surrogate modelling is particularly valuable in scenarios where the extensive reporting time of numerical models imposes a strong practical constraint~\cite{alizadeh2020,mendez2018}. \hl{In the realm of cardiovascular biomechanics analysis, surrogate models} may be used to increase the efficiency of numerical simulations of~\glspl{ATAA} biomechanics and, therefore, improve current clinical guidelines. On one hand numerical model has proved it's ability to accurately recreate the conditions of cardiovascular systems, including biological systems~\cite{Mariotti2021,Bols2016,Yang2014,Lantz2011}. On the other hand, surrogate models are able to reduce the computational cost of numerical models, while maintaining \hl{an acceptable} level of accuracy~\cite{alizadeh2020,donmazov2024}.
 
 Over the past few decades, a variety of techniques have been used to develop surrogate models of biomechanical systems. These techniques vary in complexity and formulation, ranging from classical regression methods to more advanced approaches such as Gaussian process regression~\cite{Su2017_ji,Saida2023_vm} and~\gls{AI} architectures~\cite{Hashemi2023,Moura2024_vy}. Gaussian processes were, for instance, used by~\citet{Di_Achille2018_pn} to assist on the estimations of mechanical parameters of the left ventricular myocardium. Regarding~\gls{AI}-based approaches,~\citet{Liang2023_on} trained~\gls{DNN} with~\gls{CSM} data of the aortic wall to estimate the deformation field under a fixed pressure load;~\citet{Moura2024_rh} developed surrogate models of the pelvic floor dynamics during vaginal delivery using tree-based algorithms (random forests and extreme gradient boosting), support vector regression, and~\gls{ANN}. These aimed to estimated the maximum principal stress distribution along the pelvic floor muscle at different stages of fetal head descent; and~\citet{Sajjadinia2024_dv} used graph neural networks to develop multiscale surrogate models of knee cartilage.
 
-In this article, we present a surrogate modelling framework that couples~\gls{CSM} simulations and neural networks to reproduce aortic wall mechanics in patient-specific geometries. This model aims to estimate the Second Piola-Kirchhoff stress and deformation gradient tensors distribution along the aortic wall. The surrogate model is based on a neural network architecture trained with numerical data. We used mesh/morphing techniques and~\gls{PCA} to encode the information regarding the aortic geometry. Material and hemodynamic variability was also included through parameters such as wall thickness, Young's modulus, and blood pressure. The remainder of this article is organised as follows: Section \ref{sec:methods} details the methodology employed to generate the database of numerical data and train the neural network; Section \ref{sec:results} present the results of the surrogate model performance; Section \ref{sec:discussion} discusses the main findings; and Section \ref{sec:conclusion} concludes the chapter with a summary of the contributions.
+In this article, we present a surrogate modelling framework that couples~\gls{CSM} simulations and neural networks to reproduce aortic wall mechanics in patient-specific geometries. This model aims to estimate the Second Piola-Kirchhoff stress and\hl{ Right Cauchy-Green deformation }tensors distribution along the aortic wall. The surrogate model is based on a neural network architecture trained with numerical data. We used mesh/morphing techniques and~\gls{PCA} to encode the information regarding the aortic geometry. Material and hemodynamic variability was also included through parameters such as wall thickness, Young's modulus, and blood pressure. The remainder of this article is organised as follows: Section \ref{sec:methods} details the methodology employed to generate the database of numerical data and train the neural network; Section \ref{sec:results} \hl{presents} the results of the surrogate model performance; Section \ref{sec:discussion} discusses the main findings; and Section \ref{sec:conclusion} concludes the chapter with a summary of the contributions.
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -305,7 +295,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 \subsection{Mesh morphing}
   Developing a~\gls{SSM} of the~\gls{ATAA} requires generating a set of iso-topological meshes that represent patient-specific anatomies. This was accomplished through a two-step procedure. First, all segmented~\gls{ATAA} surfaces were spatially aligned with a reference mesh using an iterative closest point~(\gls{ICP}) algorithm to ensure consistent anatomical orientation. Second, the aligned reference mesh was deformed to fit each target surface using radial basis function mesh morphing. A thin plate spline kernel was selected to interpolate displacements across the 3D domain.
 
-  A key challenge in morphing anatomical structures lies in the absence of distinct anatomical landmarks. To address this, we developed an automated approach for extracting pseudo-landmarks—referred to as~\glspl{SP} to guide the morphing process. These~\gls{SP} were defined by uniformly sampling previously extracted centerline-based splines along the aortic wall. For each geometry, 16~\glspl{SP} were selected per spline across 10 cross-sectional planes.
+  A key challenge in morphing anatomical structures lies in the absence of distinct anatomical landmarks. To address this, we developed an automated approach for extracting pseudo-landmarks—referred to as \hl{Source Points (SPs)} to guide the morphing process. These \hl{SPs} were defined by uniformly sampling previously extracted centerline-based splines along the aortic wall. For each geometry, 16 \hl{SPs} were selected per spline across 10 cross-sectional planes.
 
   The initial reference mesh was chosen as the surface corresponding to the average~\gls{ATAA} diameter and centerline length across the dataset~\cite{Geronzi2023_dy,GRASSI2011112}. A triangular surface mesh was then generated using the TetGen libraries within the SimVascular framework~\cite{updegrove2017}, comprising $n = 1354$ elements.
 
@@ -319,7 +309,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
   \gls{PCA} was then applied to extract the principal modes of geometric variation. The first six principal components, ranked by decreasing explained variance, were retained for further analysis. Together, these components accounted for around 90\% of the cumulative morphological variance in the geometries dataset. The corresponding modes describe major patterns of morphological variation in the~\gls{ATAA}, such as elongation, dilation, and asymmetry.
 
 \subsection{Numerical simulations of aortic wall mechanics}
-  The mechanical response of the~\gls{ATAA} wall throughout the cardiac cycle was simulated using~\gls{CSM} simulations. The primary objective was to estimate the spatial distributions of the Second Piola-Kirchhoff stress tensor, $\bm{S}$, and the Right Cauchy-Green strain tensor, $\bm{C}$, under physiological pressure loading. These quantities were later used as output targets for the surrogate model.
+  The mechanical response of the~\gls{ATAA} wall throughout the cardiac cycle was simulated using~\gls{CSM} simulations. The primary objective was to estimate the spatial distributions of the Second Piola-Kirchhoff stress tensor, $\bm{S}$, and the Right Cauchy-Green \hl{deformation} tensor, $\bm{C}$, under physiological pressure loading. These quantities were later used as output targets for the surrogate model.
 
   The solid domain was generated by extruding the iso-topological surface meshes along the outward normal direction, assuming a uniform wall thickness. The resultant surface mesh of the~\gls{ATAA} wall was then meshed using the Gmsh library. A Python-based pipeline was developed to automate this step, ensuring consistent mesh generation across all patient-specific geometries. Node correspondence was preserved between the surface and volumetric meshes to maintain compatibility with the global shape features extracted through statistical shape analysis.
 
@@ -327,7 +317,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 
   All simulations were carried out using SimVascular on a workstation equipped with an Intel Xeon Gold 6242R 3.10 GHz CPU and 40 cores. A total of 4000 simulations were attempted, of which 3911 were successfully completed. The aortic wall density and Poisson's ratio were fixed at 1120~\si{\kilogram\per\metre\cubed}~\cite{pasta2013,Attaran2018} and 0.49~\cite{farzaneh2019,Baumler2020}, respectively. Computational settings, including the time step size and number of time steps, were kept constant across all simulations. The varying variables included the wall thickness and Young's modulus, sampled from uniform distributions $U(1, 2.5)$~\si{\milli\meter}~\cite{Mensel2014} and $U(1, 4)$~\si{\mega\pascal}~\cite{Duprey2010}, respectively. The diastolic and systolic pressures also varied and the followed normal distributions $N(80, 16)$~\si{\mmHg} and $N(120, 16)$~\si{\mmHg}, respectively.
 
-  In addition to varying mechanical and loading parameters, 500~\gls{ATAA} geometries were synthetically generated by sampling the first six~\gls{PCA} modes. Each mode was sampled from a normal distribution with zero mean and variance equal to the corresponding eigenvalue of the~\gls{PCA} covariance matrix, enabling the creation of anatomically plausible yet diverse shapes for the simulation campaign.
+  In addition to varying mechanical and loading parameters, 500~\gls{ATAA} geometries were synthetically generated by sampling the first six~\gls{PCA} modes. Each mode was sampled from a normal distribution with zero mean and variance equal to the corresponding eigenvalue of the~\gls{PCA} covariance matrix, enabling the creation of anatomically plausible yet diverse shapes for the simulation campaign. \hl{These simulations were performed using meshes with element sizes varying between 0.8--1.0 mm. These values were inspired by previous work from our group.}
   
   \begin{figure}
     \centering
@@ -342,7 +332,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 
     Each data sample consisted of an input–output pair. The input vector contained 10 features: the first six corresponded to the first six~\gls{PCA} modes, representing the patient-specific geometry. The remaining four included wall thickness, Young's modulus, diastolic pressure, and the instantaneous pressure applied.
 
-    The output vector captured the nodal distribution of two tensor fields: the Second Piola-Kirchhoff stress tensor, $\bm{S}$, and the Right Cauchy-Green strain tensor, $\bm{C}$. For each node in the iso-topological mesh, the six unique components of each tensor (due to symmetry) were recorded. As a result, each row of the output dataset had a length of $n \times 12$, with the first half corresponding to the components of $\bm{S}$ and the Second half to those of $\bm{C}$.
+    The output vector captured the nodal distribution of two tensor fields: the Second Piola-Kirchhoff stress tensor, $\bm{S}$, and the Right Cauchy-Green \hl{deformation} tensor, $\bm{C}$. For each node in the iso-topological mesh, the six unique components of each tensor (due to symmetry) were recorded. As a result, each row of the output dataset had a length of $n \times 12$, with the first half corresponding to the components of $\bm{S}$ and the Second half to those of $\bm{C}$.
 
   \subsubsection{Data pre-processing}
     To improve the robustness of the training process and ensure balanced data distribution across training, validation and testing splits, a stratified sampling strategy was employed. Specifically, the dataset was clustered into clusters using the \textit{KMeans} algorithm, based on the input features. These clusters were then used to perform a stratified shuffle split via the \textit{StratifiedShuffleSplit} function from the \textit{scikit-learn} library. The data was divided into training (80\%) and testing (20\%) sets. Within the training set, an additional 10\% was reserved for validation, resulting in final proportions of 72\% for training, 8\% for validation, and 20\% for testing.
@@ -352,12 +342,12 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
     \begin{figure}
       \centering
       \includegraphics[width=0.95\textwidth]{fig3}
-      \caption{\gls{DNN} performance overview: summary of the NMAE and R for all test samples.}
+      \caption{\gls{DNN} performance overview: summary of the NMAE and R for all test samples. \hl{Labels A--D denote representative cases with very high (A), high (B), moderate (C), and low (D) agreement levels, which are examined in detail in Figs.} \ref{fig:surface_representationStress} and \ref{fig:surface_representationStrain}.}
       \label{fig:performance_overview}
     \end{figure}
 
   \subsubsection{Model training}
-    To perform regression operations, in particular when coupling~\gls{CSM} data and~\gls{ML}, neural networks are the most commonly used approach~\cite{phellan2021}. There are also known for being capable of handling nonlinear relationships between high-dimensional input and output data~\cite{Liang2018b}. This is particularly relevant, as the developed model aims to estimate the nodal distribution of the Second Piola-Kirchhoff stress and Right Cauchy-Green strain tensors. Also, this model was implemented using the \textit{PyTorch} framework.
+    To perform regression operations, in particular when coupling~\gls{CSM} data and~\gls{ML}, neural networks are the most commonly used approach~\cite{phellan2021}. There are also known for being capable of handling nonlinear relationships between high-dimensional input and output data~\cite{Liang2018b}. This is particularly relevant, as the developed model aims to estimate the nodal distribution of the Second Piola-Kirchhoff stress and Right Cauchy-Green \hl{deformation} tensors. Also, this model was implemented using the \textit{PyTorch} framework.
     
     To identify the optimal set of hyperparameters, a grid search (\textit{GridSearchCV}) strategy was employed in combination with stratified 10-fold cross-validation (\textit{StratifiedKFold}). The grid search exhaustively evaluated combinations over a predefined parameter space, including learning rate, number of hidden layers, number of neurons per layer, dropout rate, and batch size. The final hyperparameters used for training are summarized in Table \ref{tab:final_hyperparams}. 
     
@@ -406,7 +396,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
       \mathrm{NMAE} = \frac{1}{m} \sum_{i=1}^{m} \frac{|y_i - \hat{y}_i|}{\max(y_i) - \min(y_i)}
     \end{equation}
       
-    These metrics were estimated independently for the predicted distributions of Second Piola-Kirchhoff stress ($\boldsymbol{S}$) and Right Cauchy-Green strain ($\boldsymbol{C}$). Additionally, the same analysis was repeated for the subset of patient-specific~\gls{ATAA} geometries. To better access the performance of the surrogate model, two thresholds for success were defined:
+    These metrics were estimated independently for the predicted distributions of Second Piola-Kirchhoff stress ($\boldsymbol{S}$) and Right Cauchy-Green \hl{deformation} ($\boldsymbol{C}$). Additionally, the same analysis was repeated for the subset of patient-specific~\gls{ATAA} geometries. To better access the performance of the surrogate model, two thresholds for success were defined:
     \begin{itemize}
         \item Moderate agreement: $\mathrm{R} > 0.8$ and $\mathrm{NMAE} < 0.2$
         \item High agreement: $\mathrm{R} > 0.95$ and $\mathrm{NMAE} < 0.05$
@@ -430,30 +420,20 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 \end{figure}
 
 \subsection{PCA results}
-  Concerning the results of the~\gls{SSM}, Fig. \ref{fig:pcaRes}-a shows the compactness curve. The first mode alone captures approximately 42 \% of the anatomical variation in the sample of patient-specific geometries characterized with iso-topological meshes. The Second and third modes represent 22 \% and 15 \%, respectively. Together, these three modes account for nearly 80 \% of the variability. The 90 \%, 95 \%, and 99 \% thresholds of the compactness curve were reached using 6, 10, and 25~\gls{PCA} modes, respectively. Fig. \ref{fig:pcaRes}-b illustrates the changes in geometry obtained by varying the first~\gls{PCA} mode around the mean shape.
+  Concerning the results of the~\gls{SSM}, Fig. \ref{fig:pcaRes}-a shows the compactness curve. The first mode alone captures approximately 42 \% of the anatomical variation in the sample of patient-specific geometries characterized with iso-topological meshes. \hl{The second and third modes} represent 22 \% and 15 \%, respectively. Together, these three modes account for nearly 80 \% of the variability. The 90 \%, 95 \%, and 99 \% thresholds of the compactness curve were reached using 6, 10, and 25~\gls{PCA} modes, respectively. Fig. \ref{fig:pcaRes}-b illustrates the changes in geometry obtained by varying the first~\gls{PCA} mode around the mean shape.
 
 \subsection{Neural network performance} 
   \subsubsection{Case 1 -- PCA driven geometries}
-    Fig. \ref{fig:performance_overview} summarizes the NMAE and R of all test samples. For the predictions of the Second Piola-Kirchhoff stress tensor components, 99 \% and 96 \% of the samples showed a moderate and high agreement, respectively. For the predictions of the Right Cauchy-Green strain tensor, 99 \% and 95 \% of the samples fell into these categories, respectively.
+    Fig. \ref{fig:performance_overview} summarizes the NMAE and R of all test samples. For the predictions of the Second Piola-Kirchhoff stress tensor components, 99 \% and 96 \% of the samples showed a moderate and high agreement, respectively. For the predictions of the Right Cauchy-Green \hl{deformation} tensor, 99 \% and 95 \% of the samples fell into these categories, respectively.
 
-    Fig. \ref{fig:surface_representationStress} and Fig. \ref{fig:surface_representationStrain} present the surface representations of the first principal stress and strain for four representative test cases. These examples cover different levels of agreement between the surrogate model predictions and the~\gls{CSM} simulations: A) very high, B) high, C) moderate, and D) low agreement. The heatmaps illustrate the spatial distribution in the ascending aorta mapped into a topologically equivalent rectangle. The $y$-axis corresponds to the circumferential direction, with BC and SC denoting the big and small curvatures, respectively, while the $x$-axis corresponds to the axial direction.
+    Fig. \ref{fig:surface_representationStress} and Fig. \ref{fig:surface_representationStrain} present the surface representations of the first principal stress and strain for four representative test cases. These examples cover different levels of agreement between the surrogate model predictions and the~\gls{CSM} simulations: A) very high, B) high, C) moderate, and D) low agreement. The heatmaps illustrate the spatial distribution in the ascending aorta mapped into a topologically equivalent rectangle. The $y$-axis corresponds to the circumferential direction, \hl{with GC and LC denoting the greater and lesser curvatures}, respectively, while the $x$-axis corresponds to the axial direction.
      
     For stress predictions, across all agreement levels the estimated and reference results exhibit similar spatial distributions. In particular, cases A and B also present a close match in magnitude. Cases C and D show an overestimation of stress magnitudes compared with the reference values. The predictions of the first principal strain follow the same trend, with the overestimation in cases C and D appearing even more pronounced.
 
   \subsubsection{Case 2 -- Patient-specific geometries}
     The performance of the surrogate model was also evaluated using the set of patient-specific anatomies employed in the~\gls{PCA} analysis. Figs. \ref{fig:surface_representationPSStress} and \ref{fig:surface_representationPSStrain} illustrate the comparison between surrogate model predictions and reference~\gls{CSM} results for the first principal stress and strain, respectively. These figures follow the same rationale as in Case 1, including both the performance overview and the surface representation analysis. 
 
-    For the patient-specific geometry dataset, the success rates for high agreement changed notably: 51 \% and 64 \% for the predictions of the Second Piola-Kirchhoff stress and Right Cauchy-Green strain, respectively. Nonetheless, the success rates for moderate agreement remained similar (95 \% and 97 \%, respectively). As with the PCA-driven cases, the~\gls{DNN} predicted spatial distributions follow the same qualitative patterns as the~\gls{CSM} simulations. However, more pronounced differences in the magnitude of the variables are observed in regions of reduced mechanical loading.
-
-\subsection{Correlation between error and inputs}
-  Fig. \ref{fig:inVsout} examines how the prediction error of the surrogate model varies with different input parameters. The most noticeable trend is observed for the instantaneous pressure: as the pressure increases, the prediction error decreases significantly. For the remaining variables, including the PCA shape modes, wall thickness, and Young's modulus, no clear or consistent relationship with the error can be identified. 
-  
-  \begin{figure}
-    \centering
-    \includegraphics[width=.95\textwidth]{fig8}
-    \caption{Correlation between the NMAE of the surrogate model predictions and the input parameters.}
-    \label{fig:inVsout}
-  \end{figure}
+    For the patient-specific geometry dataset, the success rates for high agreement changed notably: 51 \% and 64 \% for the predictions of the Second Piola-Kirchhoff stress and Right Cauchy-Green \hl{deformation}, respectively. Nonetheless, the success rates for moderate agreement remained similar (95 \% and 97 \%, respectively). As with the PCA-driven cases, the~\gls{DNN} predicted spatial distributions follow the same qualitative patterns as the~\gls{CSM} simulations. However, more pronounced differences in the magnitude of the variables are observed in regions of reduced mechanical loading.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -466,7 +446,7 @@ The performance analysis also revealed a decrease in success rate when the surro
 
 One major limitation observed in the high-fidelity~\gls{CSM} simulations is the presence of boundary effects, manifested as localized stress concentrations at the inlet and outlet regions. These effects are likely induced by the imposed boundary conditions. While such artifacts are confined to the boundaries and do not affect the main region of interest in the ascending aorta, they highlight the importance of carefully designing boundary conditions to avoid unrealistic stress distributions. Extending the computational domain or testing alternative boundary conditions could help mitigate these artifacts.
 
-Additional improvements can also be made in the constitutive description of the aortic wall. The present framework assumes a homogeneous wall with constant thickness and material properties. More physiologically realistic descriptions, such as spatially varying thickness, heterogeneous material properties, and histo-mechanical constitutive models, would better capture the underlying biomechanics. Incorporating these features, together with numerical validation, will be key steps towards building clinically reliable digital twins of aortic aneurysms. Future work may also include in training the effects of hypertension and hypotension.
+Additional improvements can also be made in the constitutive description of the aortic wall. The present framework assumes a homogeneous wall with constant thickness and material properties. More physiologically realistic descriptions, such as spatially varying thickness, heterogeneous material properties, and histo-mechanical constitutive models, would better capture the underlying biomechanics. \hl{Also, uniform distributions were adopted for the sampling of Young's modulus and wall thickness. This choice does not reflect the true population distribution of aortic wall properties, which is likely non-uniform.} Incorporating these features, together with numerical validation, will be key steps towards building clinically reliable digital twins of aortic aneurysms. Future work may also include in training the effects of hypertension and hypotension \hl{and a systematic mesh convergence analysis to quantify the sensitivity of the numerical results to spatial discretisation and to further assess the impact of mesh resolution on surrogate model accuracy.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
