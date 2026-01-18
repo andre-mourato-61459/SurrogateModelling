@@ -36,6 +36,8 @@
 \usepackage{soul}
 \usepackage{xcolor}
 
+\usepackage[super]{nth}
+
 %%%Author macros
 \def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
 \tsc{WGM}
@@ -405,16 +407,36 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
+
+\begin{table}[b]
+      \caption{Summary statistics of the surrogate model performance on the test set.\label{tab:tableX}}
+      \begin{tabular}{l|l|llll}
+        \toprule
+        Variable & Metric & Mean & Median & IQR & Min--Max \\
+        \midrule
+        1st Principal &$\mathrm{R}$ & 0.9926 & 0.9990 & 0.9986--0.9992 & -0.2369--1.0000 \\
+        Stress&NMAE & 0.0124 & 0.0065 & 0.0044--0.0143 & 0.0013--0.2352 \\
+        \midrule
+        1st Principal& $\mathrm{R}$ & 0.9952 & 0.9993 & 0.9989--0.9995 & 0.1445--1.0000 \\
+        Strain&NMAE  & 0.0139 & 0.0070 & 0.0037--0.0166 & 0.0009--0.4556 \\
+        \bottomrule
+      \end{tabular}\\
+      \noindent{\footnotesize{
+        \begin{flushleft}
+        IQR = Interquartile range, Min--Max = Range between the minimum and maximum values.
+    \end{flushleft}}}
+    \end{table}
+
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{fig6}
+  \includegraphics[width=0.85\textwidth]{fig6}
   \caption{Surface representation of the surrogate and~\gls{CSM} model predictions of the first principal stress for the patient-specific anatomy dataset.}
   \label{fig:surface_representationPSStress}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{fig7}
+  \includegraphics[width=0.85\textwidth]{fig7}
   \caption{Surface representation of the surrogate and~\gls{CSM} model predictions of the first principal strain for the patient-specific anatomy dataset.}
   \label{fig:surface_representationPSStrain}
 \end{figure}
@@ -424,7 +446,7 @@ The main purpose of this work is to develop an~\gls{AI}-based surrogate model of
 
 \subsection{Neural network performance} 
   \subsubsection{Case 1 -- PCA driven geometries}
-    Fig. \ref{fig:performance_overview} summarizes the NMAE and R of all test samples. For the predictions of the Second Piola-Kirchhoff stress tensor components, 99 \% and 96 \% of the samples showed a moderate and high agreement, respectively. For the predictions of the Right Cauchy-Green \hl{deformation} tensor, 99 \% and 95 \% of the samples fell into these categories, respectively.
+    Fig. \ref{fig:performance_overview} summarizes the NMAE and R of all test samples. For the predictions of the Second Piola-Kirchhoff stress tensor components, 99 \% and 96 \% of the samples showed a moderate and high agreement, respectively. For the predictions of the Right Cauchy-Green \hl{deformation} tensor, 99 \% and 95 \% of the samples fell into these categories, respectively. \hl{A quantitative global assessment of model performance over the entire test dataset is provided in Table} \ref{tab:tableX}, \hl{which reports summary statistics (mean, median, and interquartile range) for both NMAE and R.}
 
     Fig. \ref{fig:surface_representationStress} and Fig. \ref{fig:surface_representationStrain} present the surface representations of the first principal stress and strain for four representative test cases. These examples cover different levels of agreement between the surrogate model predictions and the~\gls{CSM} simulations: A) very high, B) high, C) moderate, and D) low agreement. The heatmaps illustrate the spatial distribution in the ascending aorta mapped into a topologically equivalent rectangle. The $y$-axis corresponds to the circumferential direction, \hl{with GC and LC denoting the greater and lesser curvatures}, respectively, while the $x$-axis corresponds to the axial direction.
      
